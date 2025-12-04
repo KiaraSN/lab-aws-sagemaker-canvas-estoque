@@ -1,0 +1,53 @@
+# Previsão de Estoque Inteligente (Simulação SageMaker Canvas)
+
+## Introdução
+Este repositório contém uma solução para o desafio "Previsão de Estoque Inteligente". O objetivo é treinar um modelo de previsão de quantidade em estoque e documentar o processo. **Observação:** por questões de custo/assinatura, o treinamento foi realizado localmente com Python/Scikit-Learn, simulando os passos que seriam feitos no Amazon SageMaker Canvas.
+
+## Dataset
+Arquivo usado: `datasets/dataset-500-curso-sagemaker-canvas-dio.csv`  
+Colunas principais:
+- `ID_PRODUTO` — identificador do produto
+- `DIA` — data da observação (foi transformada em variáveis de tempo)
+- `FLAG_PROMOCAO` — indicador de promoção (0/1)
+- `QUANTIDADE_ESTOQUE` — **target** (quantidade em estoque)
+
+## Upload no Canvas 
+No SageMaker Canvas o fluxo foi:
+1. Criar um projeto e fazer upload do CSV.
+2. Indicar a variável target (`QUANTIDADE_ESTOQUE`).
+3. Configurar datas e tipos de variáveis.
+
+Acabe tendo de fazer simulação. Nesta simulação, o upload e a configuração foram realizados localmente: o script `notebook.ipynb` lê o CSV e mapeia as variáveis automaticamente (transforma `DIA` em `DIA_year`, `DIA_month`, `DIA_day`, `DIA_weekday`).
+
+## Como as variáveis foram configuradas (mapeamento)
+- Target: `QUANTIDADE_ESTOQUE`.
+- Features usadas:
+  - Numéricas: `ID_PRODUTO`, `FLAG_PROMOCAO`, `DIA_year`, `DIA_month`, `DIA_day`, `DIA_weekday`.
+- Pré-processamento:
+  - Imputação de valores numéricos com a mediana.
+  - Categóricas (se existirem) imputadas e One-Hot encoded.
+
+## Treinamento
+- Algoritmo: `RandomForestRegressor` (100 árvores).
+- Split: 80% treino / 20% teste.
+- Pipeline: `ColumnTransformer` para pré-processamento + RandomForest.
+
+O treinamento está no notebook `notebook.ipynb` e no script `train_model.py`.
+
+## Métricas 
+- MAE: 7.13
+- RMSE: 10.34
+- R²: 0.8696
+
+Essas métricas foram obtidas no conjunto de teste (holdout). Em um ambiente Canvas, essas métricas aparecem na aba de avaliação do modelo.
+
+## Feature importance
+As principais features (top) foram exibidas no relatório do notebook. (Veja `notebook.ipynb` para o gráfico).
+
+## Previsões
+As previsões geradas foram salvas em `predictions.csv` (contendo features, `y_true` e `y_pred`).
+
+## Conclusões
+- O modelo apresenta bom ajuste (R² ≈ 0.87).  
+- `DIA` (transformado em componentes temporais) e `FLAG_PROMOCAO` contribuem para as previsões.  
+
