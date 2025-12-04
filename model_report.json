@@ -1,0 +1,13 @@
+{
+  "dataset_shape": [
+    500,
+    4
+  ],
+  "chosen_target": "QUANTIDADE_ESTOQUE",
+  "n_features": 6,
+  "metrics": {
+    "mae": 7.1322,
+    "rmse": 10.338926346579706,
+    "r2": 0.869556470709836
+  }
+}
